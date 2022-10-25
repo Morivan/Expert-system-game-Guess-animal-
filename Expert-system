@@ -1,0 +1,66 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <windows.h>
+
+using namespace std;
+
+
+// Создание структуры
+class Node { 
+public:
+    Node() : yes(-1), no(-1) {}
+    string q; //Question
+    int yes;
+    int no;
+};
+
+int main(){
+    SetConsoleCP(1251); // Введение русского языка в программу не только в main, но и структуру Node
+    SetConsoleOutputCP(1251);
+    vector<Node> tree; // Создание дереве через структуру Node и класс vector
+    Node cat;
+    cat.q= "кот"; // Создание корня
+    tree.push_back(cat);
+    for (;;) // Костыль для того, чтобы можно было сыграете ещё
+    {
+        int i = 0;
+        while (tree[i].yes != -1 && tree[i].no != -1) // Переход по древу
+        {
+            cout << tree[i].q << "? (1 - Да, 0 - Нет) ";
+            int ans; //Answer
+            cin >> ans;
+            if (ans == 1)
+                i = tree[i].yes;
+            else
+                i = tree[i].no;
+        }
+        cout << "Это " << tree[i].q << "? (1 - Да, 0 - Нет) "; // Проверка
+        int ans; // Новый ans
+        cin >> ans;
+        if (ans == 1) {
+            cout << "Угадали!\n";
+        }
+        else // Введение новых узлов
+        {
+            cout << "Кто это? ";
+            string anim; // Animal
+            cin >> anim;
+            cout << "Чем " << tree[i].q << " отличается от " << anim << "? ";
+            string diff;
+            cin >> diff; // Difference
+            Node yes = tree[i];
+            Node no;
+            no.q = anim;
+            tree[i].yes = tree.size();
+            tree.push_back(yes);
+            tree[i].no = tree.size();
+            tree.push_back(no);
+            tree[i].q = diff;
+        }
+        cout << "Сыграете ещё раз? (1 - Да, 0 - Нет) ";
+        cin >> ans;
+        if (ans == 0)
+            break;
+    }
+}
